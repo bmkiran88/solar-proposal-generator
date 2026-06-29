@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viking Power - Solar Proposal Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .print-card { border: 1px solid #e2e8f0 !important; box-shadow: none !important; }
+            body { background: white; color: black; }
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen">
+
+    <header class="bg-slate-900 text-white py-4 px-6 shadow-md no-print flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="bg-amber-500 text-slate-900 p-2 rounded-lg font-bold text-xl tracking-wider">VP</div>
+            <h1 class="text-xl font-bold tracking-tight">Viking Power <span class="text-amber-400 text-sm font-normal">Proposal Desk</span></h1>
+        </div>
+        <p class="text-xs text-slate-400">System Date: 2026</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <section class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100 no-print space-y-6 h-fit max-h-[calc(100vh-120px)] overflow-y-auto">
+            <h2 class="text-lg font-bold text-slate-900 border-b pb-2 border-slate-100 flex items-center gap-2">
+                🔧 Project Parameters
+            </h2>
+            
+            <div class="space-y-3">
+                <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Client Context</h3>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Customer Name</label>
+                    <input type="text" id="custName" value="Aditi Enterprises" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Location</label>
+                    <input type="text" id="custLocation" value="HSR Layout, Bangalore" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Coordinates</label>
+                    <input type="text" id="custCoordinates" value="12.9141° N, 77.6412° E" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                </div>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Technical Specifications</h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">System Type</label>
+                        <select id="systemType" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
+                            <option value="On-Grid">On-Grid</option>
+                            <option value="Hybrid">Hybrid</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Structure Type</label>
+                        <select id="structureType" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
+                            <option value="RCC Flat Roof">RCC Flat Roof</option>
+                            <option value="Metal Sheet Roof">Metal Sheet Roof</option>
+                            <option value="Tile Roof">Tile Roof</option>
+                            <option value="Ground Mounted">Ground Mounted</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="hybridFields" class="hidden bg-amber-50/50 p-3 rounded-xl border border-amber-100 space-y-3">
+                    <p class="text-[11px] font-bold text-amber-800 uppercase tracking-wide">Battery Bank Specs</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Battery Type</label>
+                            <input type="text" id="batteryType" value="Lithium Ferro Phosphate (LFP)" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Battery Make</label>
+                            <input type="text" id="batteryMake" value="Viking Power / Custom" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Solar Load (kW)</label>
+                        <input type="number" id="solarLoad" value="10" step="0.1" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Panel Rating (Watts)</label>
+                        <input type="number" id="bomPanelWatts" value="550" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Inverter Cap. (kW)</label>
+                        <input type="number" id="bomInverterKw" value="10" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Inverter Type/Make</label>
+                        <input type="text" id="bomInverterType" value="High-Efficiency Inverter" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Project Timeline</label>
+                    <input type="text" id="timeline" value="3-4 Weeks" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                </div>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Commercials & Grid</h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Base Cost (INR)</label>
+                        <input type="number" id="baseCost" value="450000" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">Tariff (Rs / Unit)</label>
+                        <input type="number" id="gridTariff" value="8.5" step="0.1" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">Quotation Created By</label>
+                    <select id="createdBy" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
+                        <option value="manju">Manju Kiran</option>
+                        <option value="bharath">Bharath</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="window.print()" class="w-full bg-slate-900 text-white font-medium py-2.5 rounded-xl transition duration-150 shadow-sm cursor-pointer hover:bg-slate-800 flex items-center justify-center gap-2 mt-4">
+                🖨️ Print / Save as PDF
+            </button>
+        </section>
+
+        <section class="lg:col-span-8 bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-slate-100 print-card min-h-[297mm] flex flex-col justify-between">
+            
+            <div>
+                <div class="flex justify-between items-start border-b pb-6 border-slate-100">
+                    <div>
+                        <div class="flex items-center space-x-2 text-slate-950 font-black text-2xl tracking-tight mb-1">
+                            <span class="text-amber-500">⚡</span> M/s VIKING POWER
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Solar EPC Experts & Engineering Solutions<br>
+                            HBR Layout, Bangalore, KA
+                        </p>
+                    </div>
+                    <div class="text-right text-xs text-slate-500 space-y-1">
+                        <div class="inline-block bg-amber-50 text-amber-800 px-2.5 py-1 rounded font-semibold text-[11px] mb-1">COMMERCIAL PROPOSAL</div>
+                        <p>Date: <span id="propDate"></span></p>
+                        <p>Valid Until: 15 Days from Issue</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6 my-6 p-4 bg-slate-50 rounded-xl text-sm">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Prepared For</h4>
+                        <p class="font-bold text-slate-950" id="viewCustName"></p>
+                        <p class="text-slate-600" id="viewLocation"></p>
+                        <p class="text-xs text-slate-500 mt-1" id="viewCoordinates"></p>
+                    </div>
+                    <div class="border-l border-slate-200 pl-6">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Your Solar Consultant</h4>
+                        <p class="font-bold text-slate-950" id="viewRepName"></p>
+                        <p class="text-slate-600" id="viewRepPhone"></p>
+                        <p class="text-slate-600 break-all" id="viewRepMail"></p>
+                    </div>
+                </div>
+
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">System Metrics & Financials</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-[11px] font-medium text-slate-500 uppercase">Proposed Size</p>
+                        <p class="text-xl font-bold text-slate-950 mt-0.5"><span id="viewKw"></span> kW</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-[11px] font-medium text-slate-500 uppercase">Year 1 Generation</p>
+                        <p class="text-xl font-bold text-slate-950 mt-0.5"><span id="viewYear1Gen"></span> units</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-[11px] font-medium text-slate-500 uppercase">Year 1 Savings</p>
+                        <p class="text-xl font-bold text-emerald-700 mt-0.5">₹<span id="viewYear1Savings"></span></p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-[11px] font-medium text-slate-500 uppercase">Estimated ROI</p>
+                        <p class="text-xl font-bold text-amber-600 mt-0.5"><span id="viewRoi"></span> Years</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-left text-xs border border-slate-200 rounded-lg overflow-hidden">
+                        <thead>
+                            <tr class="bg-slate-900 text-white font-medium">
+                                <th class="p-2.5">Component / Specification</th>
+                                <th class="p-2.5">Design Details</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200" id="bomTableBody">
+                            <tr>
+                                <td class="p-2.5 font-medium text-slate-600">System Architecture</td>
+                                <td class="p-2.5 text-slate-900 font-bold text-amber-700" id="viewSystemType"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium text-slate-600">Structure Matrix</td>
+                                <td class="p-2.5 text-slate-900" id="viewStructure"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium text-slate-600">PV Modules (Panel Rating)</td>
+                                <td class="p-2.5 text-slate-900" id="viewPanelWatts"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium text-slate-600">Solar Inverter System</td>
+                                <td class="p-2.5 text-slate-900" id="viewInverterDetails"></td>
+                            </tr>
+                            <tr id="viewBatteryRow" class="hidden">
+                                <td class="p-2.5 font-medium text-amber-800 bg-amber-50/40">Battery Storage Bank</td>
+                                <td class="p-2.5 text-slate-900 bg-amber-50/40 font-medium" id="viewBatteryDetails"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium text-slate-600">Project Delivery Timeline</td>
+                                <td class="p-2.5 text-slate-900" id="viewTimeline"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="p-4 rounded-xl border border-slate-200 space-y-2">
+                        <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider border-b pb-1 border-slate-100">Investment Summary</h4>
+                        <div class="flex justify-between text-xs text-slate-600">
+                            <span>Base Project Cost:</span>
+                            <span>₹<span id="pBase"></span></span>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-600">
+                            <span>GST Added (8.9%):</span>
+                            <span>₹<span id="pGst"></span></span>
+                        </div>
+                        <div class="flex justify-between text-sm font-bold text-slate-950 border-t pt-2 border-slate-200">
+                            <span>Total Proposed Cost:</span>
+                            <span>₹<span id="pTotal"></span></span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl border border-slate-200 text-[11px] space-y-1 bg-slate-50">
+                        <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider border-b pb-1 border-slate-100">Bank Remittance Info</h4>
+                        <p><span class="font-medium text-slate-500">Account Name:</span> M/s Viking Power</p>
+                        <p><span class="font-medium text-slate-500">Account Number:</span> 8722393939</p>
+                        <p><span class="font-medium text-slate-500">Bank Name:</span> IndusInd Bank</p>
+                        <p><span class="font-medium text-slate-500">IFSC Code:</span> INDB0000294</p>
+                        <p><span class="font-medium text-slate-500">Branch Location:</span> HBR Layout</p>
+                    </div>
+                </div>
+
+                <div class="bg-emerald-50 text-emerald-900 p-4 rounded-xl flex items-center justify-around text-center border border-emerald-100 mb-8">
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-wide text-emerald-700">Annual CO₂ Offset</p>
+                        <p class="text-xl font-black mt-0.5"><span id="envCo2"></span> kg</p>
+                    </div>
+                    <div class="h-8 w-[1px] bg-emerald-200"></div>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-wide text-emerald-700">Equiv. Trees Planted</p>
+                        <p class="text-xl font-black mt-0.5"><span id="envTrees"></span> Trees</p>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">15-Year Cumulative Financial Evaluation</h4>
+                    <div class="w-full h-48">
+                        <canvas id="financialChart"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">Detailed Yearly Performance Matrix (0.7% Panel Degradation)</h4>
+                    <div class="overflow-x-auto max-h-60 overflow-y-auto border border-slate-200 rounded-lg">
+                        <table class="w-full text-left text-[11px]">
+                            <thead class="bg-slate-100 text-slate-700 font-medium uppercase text-[10px] sticky top-0">
+                                <tr>
+                                    <th class="p-2 border-b border-slate-200">Year</th>
+                                    <th class="p-2 border-b border-slate-200">Est. Generation (kWh)</th>
+                                    <th class="p-2 border-b border-slate-200">Cost Before Solar (Grid)</th>
+                                    <th class="p-2 border-b border-slate-200">Cost After Solar</th>
+                                    <th class="p-2 border-b border-slate-200 text-emerald-700">Net Savings</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrixBody" class="divide-y divide-slate-200 text-slate-600">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-slate-100 flex justify-between items-end text-[10px] text-slate-400">
+                <div>
+                    <p class="font-semibold text-slate-600">M/s Viking Power — Commercial Solar Portfolio Division</p>
+                    <p>Generated dynamically using client site parameters.</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-medium text-slate-700">Authorized Signature</p>
+                    <div class="h-6"></div>
+                    <p class="font-bold text-slate-900" id="viewFooterSign"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const reps = {
+            manju: {
+                name: "Manju Kiran",
+                phone: "+91-8722393939",
+                email: "manjukiran@vikingpower.in"
+            },
+            bharath: {
+                name: "Bharath",
+                phone: "+91-9632796710",
+                email: "bharath@vikingpower.in"
+            }
+        };
+
+        let chartInstance = null;
+
+        // Toggle handling function for hybrid context variables
+        function updateTechnicalFieldsToggle() {
+            const systemType = document.getElementById('systemType').value;
+            const hybridFieldsBlock = document.getElementById('hybridFields');
+            const outputBatteryRow = document.getElementById('viewBatteryRow');
+
+            if (systemType === 'Hybrid') {
+                hybridFieldsBlock.classList.remove('hidden');
+                outputBatteryRow.classList.remove('hidden');
+            } else {
+                hybridFieldsBlock.classList.add('hidden');
+                outputBatteryRow.classList.add('hidden');
+            }
+        }
+
+        function runProposalCalculation() {
+            // Update input UI layout state first
+            updateTechnicalFieldsToggle();
+
+            // Read Inputs
+            const custName = document.getElementById('custName').value;
+            const custLocation = document.getElementById('custLocation').value;
+            const custCoordinates = document.getElementById('custCoordinates').value;
+            const systemType = document.getElementById('systemType').value;
+            const structureType = document.getElementById('structureType').value;
+            const batteryType = document.getElementById('batteryType').value;
+            const batteryMake = document.getElementById('batteryMake').value;
+            const solarLoad = parseFloat(document.getElementById('solarLoad').value) || 0;
+            const bomPanelWatts = document.getElementById('bomPanelWatts').value;
+            const bomInverterKw = document.getElementById('bomInverterKw').value;
+            const bomInverterType = document.getElementById('bomInverterType').value;
+            const timeline = document.getElementById('timeline').value;
+            const baseCost = parseFloat(document.getElementById('baseCost').value) || 0;
+            const gridTariff = parseFloat(document.getElementById('gridTariff').value) || 0;
+            const selectedRepKey = document.getElementById('createdBy').value;
+
+            // Date Configuration
+            document.getElementById('propDate').innerText = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Team Context Assignments
+            const rep = reps[selectedRepKey];
+            document.getElementById('viewRepName').innerText = rep.name;
+            document.getElementById('viewRepPhone').innerText = rep.phone;
+            document.getElementById('viewRepMail').innerText = rep.email;
+            document.getElementById('viewFooterSign').innerText = rep.name;
+
+            // Direct Form Identifiers Mapping
+            document.getElementById('viewCustName').innerText = custName;
+            document.getElementById('viewLocation').innerText = custLocation;
+            document.getElementById('viewCoordinates').innerText = custCoordinates;
+            document.getElementById('viewSystemType').innerText = `${systemType} Architecture`;
+            document.getElementById('viewKw').innerText = solarLoad;
+            document.getElementById('viewStructure').innerText = structureType;
+            document.getElementById('viewPanelWatts').innerText = `${bomPanelWatts}W High-Efficiency Modules`;
+            document.getElementById('viewInverterDetails').innerText = `${bomInverterKw} kW (${bomInverterType})`;
+            document.getElementById('viewTimeline').innerText = timeline;
+
+            if(systemType === 'Hybrid') {
+                document.getElementById('viewBatteryDetails').innerText = `${batteryMake} — ${batteryType}`;
+            }
+
+            // Commercial Math Calculations
+            const gstAmount = baseCost * 0.089;
+            const finalCost = baseCost + gstAmount;
+
+            document.getElementById('pBase').innerText = Math.round(baseCost).toLocaleString('en-IN');
+            document.getElementById('pGst').innerText = Math.round(gstAmount).toLocaleString('en-IN');
+            document.getElementById('pTotal').innerText = Math.round(finalCost).toLocaleString('en-IN');
+
+            // Daily Generation Basis Rule: 4.15 kWh per kW per day
+            const dailyGen = solarLoad * 4.15;
+            const year1Gen = dailyGen * 365;
+            const year1Savings = year1Gen * gridTariff;
+            const roi = year1Savings > 0 ? (finalCost / year1Savings).toFixed(2) : '0.00';
+
+            document.getElementById('viewYear1Gen').innerText = Math.round(year1Gen).toLocaleString('en-IN');
+            document.getElementById('viewYear1Savings').innerText = Math.round(year1Savings).toLocaleString('en-IN');
+            document.getElementById('viewRoi').innerText = roi;
+
+            // Environmental Impact Math
+            const co2Saved = year1Gen * 0.82; 
+            const treesPlanted = co2Saved / 22;
+            document.getElementById('envCo2').innerText = Math.round(co2Saved).toLocaleString('en-IN');
+            document.getElementById('envTrees').innerText = Math.round(treesPlanted).toLocaleString('en-IN');
+
+            // 15 Year Compilation Data Loop (0.7% Panel Degradation Applied Annually)
+            let matrixHtml = '';
+            let chartLabels = [];
+            let gridCostsData = [];
+            let solarCostsData = [];
+
+            let currentYearGen = year1Gen;
+            let cumulativeGridCost = 0;
+            let cumulativeSolarCost = finalCost; 
+
+            for (let year = 1; year <= 15; year++) {
+                let yearGridCost = currentYearGen * gridTariff;
+                let netYearSavings = yearGridCost; 
+
+                cumulativeGridCost += yearGridCost;
+
+                matrixHtml += `<tr>
+                    <td class="p-2 border-b border-slate-100 font-bold text-slate-900">Year ${year}</td>
+                    <td class="p-2 border-b border-slate-100">${Math.round(currentYearGen).toLocaleString('en-IN')}</td>
+                    <td class="p-2 border-b border-slate-100">₹${Math.round(yearGridCost).toLocaleString('en-IN')}</td>
+                    <td class="p-2 border-b border-slate-100 text-slate-400">₹0</td>
+                    <td class="p-2 border-b border-slate-100 text-emerald-700 font-semibold">₹${Math.round(netYearSavings).toLocaleString('en-IN')}</td>
+                </tr>`;
+
+                chartLabels.push(`Yr ${year}`);
+                gridCostsData.push(Math.round(cumulativeGridCost));
+                solarCostsData.push(Math.round(cumulativeSolarCost));
+
+                // Apply 0.7% degradation for the next year run
+                currentYearGen *= (1 - 0.007);
+            }
+            document.getElementById('matrixBody').innerHTML = matrixHtml;
+
+            // Chart Rendering Interface Lifecycle
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            const ctx = document.getElementById('financialChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        {
+                            label: 'Cumulative Cost Without Solar (Grid)',
+                            data: gridCostsData,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'Total Capital Invested in Solar',
+                            data: solarCostsData,
+                            borderColor: '#059669',
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash:,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } }
+                    },
+                    scales: {
+                        y: { ticks: { font: { size: 9 } }, grid: { color: '#f1f5f9' } },
+                        x: { ticks: { font: { size: 9 } }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Attach Realtime Execution Event Loops
+        const inputIds = ['custName', 'custLocation', 'custCoordinates', 'systemType', 'structureType', 'batteryType', 'batteryMake', 'solarLoad', 'bomPanelWatts', 'bomInverterKw', 'bomInverterType', 'timeline', 'baseCost', 'gridTariff', 'createdBy'];
+        inputIds.forEach(id => {
+            document.getElementById(id).addEventListener('input', runProposalCalculation);
+        });
+
+        // Initial App Bootstrap Initialization Run
+        window.onload = runProposalCalculation;
+    </script>
+</body>
+</html>
